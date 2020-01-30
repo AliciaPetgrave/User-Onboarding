@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useState, useEffect} from "react"
 import Axios from "axios"
 import * as Yup from "yup"
 import {withFormik, Form, Field} from "formik"
@@ -6,6 +6,11 @@ import {withFormik, Form, Field} from "formik"
 
 function FormInfo (){
 
+    //sets state for incoming values data
+    const [person, setSPerson] = ([])
+
+
+    
     return(
         <div>
             <h1>User Onboarding</h1>
@@ -37,5 +42,14 @@ function FormInfo (){
     )
 }
 
-const FormikFormInfo = withFormik (FormInfo)
+const FormikFormInfo = withFormik({
+    mapPropsToValues(name, email, password, terms){
+        return{
+            name: name || "",
+            email: email || "",
+            password: password || "",
+            terms: terms || false,
+        }
+    }
+}) (FormInfo)
 export default FormikFormInfo
