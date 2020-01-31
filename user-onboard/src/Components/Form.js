@@ -4,7 +4,7 @@ import * as Yup from "yup"
 import {withFormik, Form, Field} from "formik"
 
 
-function FormInfo (){
+function FormInfo ({values, errors, touched}){
 
     //sets state for incoming values data
     const [person, setSPerson] = ([])
@@ -18,21 +18,25 @@ function FormInfo (){
                 <label>
                     Name:
                     <Field type="text" name="name"/>
+                    {touched.name && errors.name && (<p>{errors.name}</p>)}
                 </label>
 
                 <label>
                     Email:
                     <Field type="text" name="email"/>
+                    {touched.email && errors.email && (<p>{errors.email}</p>)}
                 </label>
 
                 <label>
                     Password:
                     <Field type="text" name="password"/>
+                    {touched.password && errors.password && (<p>{errors.password}</p>)}
                 </label>
 
                 <label>
                     Terms of Service
-                    <Field type="checkbox" name="terms"/>
+                    <Field type="checkbox" name="terms" checked={values.terms}/>
+                    {touched.terms && errors.terms && (<p>{errors.terms}</p>)}
                 </label>
 
                 <button type="submit">Submit</button>
@@ -45,11 +49,18 @@ function FormInfo (){
 const FormikFormInfo = withFormik({
     mapPropsToValues(name, email, password, terms){
         return{
-            name: name || "",
+            name: "",
             email: email || "",
-            password: password || "",
-            terms: terms || false,
+            password: "",
+            terms: false,
         }
-    }
+    },
+    //validation set up for errors
+    validationSchema: Yup.object().shape({
+        name: Yup.string().required("Name is required"),
+        email: Yup.string().email("Invalid email address").required("Email is required"),
+        password: Yup.string().required("Password is required"),
+        terms: Yup.boolean().oneOf([true], "Must agree to Terms of Service").required()
+    })
 }) (FormInfo)
 export default FormikFormInfo
