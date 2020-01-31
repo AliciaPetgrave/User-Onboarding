@@ -29,7 +29,7 @@ function FormInfo ({values, errors, touched}){
 
                 <label>
                     Password:
-                    <Field type="text" name="password"/>
+                    <Field type="password" name="password"/>
                     {touched.password && errors.password && (<p>{errors.password}</p>)}
                 </label>
 
@@ -55,12 +55,22 @@ const FormikFormInfo = withFormik({
             terms: false,
         }
     },
-    //validation set up for errors
+    //validation set up with error messages
     validationSchema: Yup.object().shape({
         name: Yup.string().required("Name is required"),
         email: Yup.string().email("Invalid email address").required("Email is required"),
         password: Yup.string().required("Password is required"),
         terms: Yup.boolean().oneOf([true], "Must agree to Terms of Service").required()
-    })
+    }),
+    //POSTing values submitted, to axios site
+    handleSubmit(values, formikBag){
+        Axios.post("https://reqres.in/api/users", values)
+        .then(response => {
+            console.log("Success!", response)
+        })
+        .catch(error =>{
+            console.log(error)
+        })
+    }
 }) (FormInfo)
 export default FormikFormInfo
