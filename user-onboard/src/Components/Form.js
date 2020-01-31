@@ -76,10 +76,11 @@ const FormikFormInfo = withFormik({
         terms: Yup.boolean().oneOf([true], "Must agree to Terms of Service").required()
     }),
     //POSTing values submitted, to axios site
-    handleSubmit(values, {setStatus}){
+    handleSubmit(values, {setStatus, resetForm}){
         Axios.post("https://reqres.in/api/users", values)
         .then(response => {
             console.log("Success!", response)
+            resetForm()
             setStatus(response.data)
         })
         .catch(error =>{
